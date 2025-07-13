@@ -1,0 +1,21 @@
+
+    nom 
+    prenom 
+    email 
+    telephone 
+    mot_de_passe 
+   confirmatiobn de mot_de_passe
+    
+    numero_cnom 
+    specialite
+    adresse_cabinet 
+    ville 
+    wilaya 
+
+    piece_identite recto verso 
+   upload  diplome 
+   upload attestation_cnom 
+   upload photo_profil 
+    signature_medecin (numerique if si possible de faire)
+
+

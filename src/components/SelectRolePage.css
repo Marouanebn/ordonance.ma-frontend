@@ -1,0 +1,292 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  background-color: #f4f4f4;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Page Wrapper */
+.select-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  padding-top: 50px;
+}
+
+/* Card Container */
+.select-container {
+  display: flex;
+  width: 1100px;
+  height: 600px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+}
+
+/* Left Side */
+.select-left {
+  background: linear-gradient(135deg, #9C70DB, #7D4CC4);
+  color: white;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+}
+
+.select-left h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.select-left .description {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 300px;
+}
+
+.bottom-text {
+  position: absolute;
+  bottom: 1rem;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* Right Side */
+.select-right {
+  flex: 1;
+  background-color: white;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Titles */
+.form-title {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+/* Badge Buttons */
+.badge-container {
+  margin-bottom: 30px;
+  display: flex;
+  gap: 12px;
+}
+
+.badge-button {
+  margin: 0 8px;
+  background-color: #9C70DB;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.badge-button:hover {
+  background-color: #7D4CC4;
+}
+
+/* Role Cards */
+.role-cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.role-card {
+  background-color: #f5f5f5;
+  padding: 25px;
+  border-radius: 16px;
+  width: 130px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
+}
+
+.role-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.role-icon {
+  font-size: 30px;
+  color: #7D4CC4;
+  margin-bottom: 10px;
+}
+
+.role-name {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Header Rows */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.header-row .form-title {
+  margin-bottom: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.top-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.top-header .form-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5); /* semi-transparent black */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal Content */
+.modal-content {
+  background: #ffffff !important; /* PURE white background */
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+/* Close Button */
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #7D4CC4;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+/* Form Inputs */
+.formulaire-inscription input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  background-color: #fff;
+}
+
+/* Submit Button */
+.submit-btn {
+  background-color: #9C70DB;
+  color: white;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #7D4CC4;
+}
+
+
+.formulaire-inscription {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 15px;
+  font-family: Arial, sans-serif;
+}
+
+.formulaire-inscription input[type="text"],
+.formulaire-inscription input[type="email"],
+.formulaire-inscription input[type="tel"],
+.formulaire-inscription input[type="password"],
+.formulaire-inscription input[type="file"] {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 8px 0 16px;
+  box-sizing: border-box;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.formulaire-inscription input:focus {
+  border-color: #9C70DB;
+  outline: none;
+}
+
+.step-buttons button {
+  background-color: #9C70DB;
+  border: none;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.step-buttons button:hover {
+  background-color: #7D4CC4;
+}
+
+.step-buttons button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.step-buttons {
+  display: flex;
+  gap: 10px; /* space between buttons */
+}
+ 
