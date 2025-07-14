@@ -86,7 +86,7 @@ const Sidebar = () => {
       <div className="sidebar-footer">
         <p>Dr Slimani Amlah</p>
         <span>Administrateur</span>
-        <p className="copyright">© 2024 Agileteem</p>
+        <p className="copyright">© 2025 </p>
       </div>
     </div>
   );
