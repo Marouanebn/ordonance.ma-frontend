@@ -1,9 +1,57 @@
 import React, { useState } from 'react';
 import './LoginPage.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import api from '../lib/api';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      const response = await api.post('/login', { email, password });
+      const { token, user } = response.data.data;
+      localStorage.setItem('token', token);
+      // Determine role message and dashboard route
+      let roleMsg = '';
+      let dashboardRoute = '/dashboard';
+      if (user && user.roles && user.roles.length > 0) {
+        const role = user.roles[0].name;
+        if (role === 'medecin') {
+          roleMsg = 'Je suis médecin';
+          dashboardRoute = '/dashboard-medecin';
+        } else if (role === 'patient') {
+          roleMsg = 'Je suis patient';
+          dashboardRoute = '/dashboard-patient';
+        } else if (role === 'pharmacien') {
+          roleMsg = 'Je suis pharmacien';
+          dashboardRoute = '/dashboard-pharmacien';
+        } else if (role === 'laboratoire') {
+          roleMsg = 'Je suis laboratoire';
+          dashboardRoute = '/dashboard-laboratoire';
+        } else if (role === 'admin') {
+          roleMsg = 'Je suis admin';
+          dashboardRoute = '/dashboard';
+        }
+      }
+      localStorage.setItem('roleMessage', roleMsg);
+      navigate(dashboardRoute);
+    } catch (err) {
+      setError(
+        err.response?.data?.message || 'Erreur lors de la connexion. Veuillez réessayer.'
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="login-wrapper">
@@ -23,13 +71,15 @@ function LoginPage() {
           <img src="/logo-colored.png" alt="Ordonnance Logo" className="logo-small" />
           <h3 className="form-title">Se connecter</h3>
 
-          <form className="login-form" onSubmit={(e) => e.preventDefault()}>
+          <form className="login-form" onSubmit={handleSubmit}>
             <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
               placeholder="Votre Adresse Email"
               required
+              value={email}
+              onChange={e => setEmail(e.target.value)}
             />
 
             <label htmlFor="password">Mot de passe</label>
@@ -39,6 +89,8 @@ function LoginPage() {
                 id="password"
                 placeholder="Mot de passe"
                 required
+                value={password}
+                onChange={e => setPassword(e.target.value)}
               />
               <span
                 className="toggle-icon"
@@ -49,6 +101,8 @@ function LoginPage() {
               </span>
             </div>
 
+            {error && <div className="error-message">{error}</div>}
+
             <div className="form-options">
               <label>
                 <input type="checkbox" /> Se rappeler de
@@ -56,7 +110,9 @@ function LoginPage() {
               <a href="#" className="forgot">Mot de passe oublié?</a>
             </div>
 
-            <button type="submit" className="btn-login">Se connecter</button>
+            <button type="submit" className="btn-login" disabled={loading}>
+              {loading ? 'Connexion...' : 'Se connecter'}
+            </button>
 
             <p className="signup-link">
               Vous n'avez pas un compte ? <a href="/select-role">Inscrivez vous</a>
