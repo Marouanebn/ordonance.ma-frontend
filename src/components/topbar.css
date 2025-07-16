@@ -1,0 +1,43 @@
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+  background-color: white;
+  border-bottom: 1px solid #eee;
+}
+
+.topbar-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #5a3ee3;
+  margin: 0;
+}
+
+/* Container for the input and icon */
+.topbar-search {
+  position: relative;
+  width: 250px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px 8px 36px; /* Add left padding for the icon */
+  border-radius: 24px;
+  border: 1px solid #e2e2e2;
+  background-color: #fff;
+  font-size: 14px;
+  outline: none;
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Position the icon inside the input */
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #aaa;
+  pointer-events: none; /* allows clicking the input */
+}

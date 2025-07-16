@@ -1,14 +1,19 @@
 import React from "react";
-import Sidebar from "./Sidebar.jsx";
-import "./Sidebar.css";
+import SidebarMedecin from "./SidebarMedecin.jsx";
+import Topbar from "./Topbar.jsx";
+import "./topbar.css";
 
 const Dashboard = () => {
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      <Sidebar />
-      <div style={{ flex: 1, padding: "30px" }}>
-        <h1>Bienvenue</h1>
-        {/* Other dashboard content goes here */}
+    <div style={{ display: "flex", minHeight: "100vh" }}>
+      <SidebarMedecin />
+
+      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <Topbar title="Tableau de bord" />
+
+        <div style={{ flex: 1, padding: "30px", backgroundColor: "#f9f9f9" }}>
+          <h1>Bienvenue</h1>
+        </div>
       </div>
     </div>
   );

@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './components/LoginPage.jsx';
 import SelectRolePage from './components/SelectRolePage.jsx';
 import Dashboard from './components/Dashboard.jsx'; // Add this import
+import Dashboard1 from './components/Dashboard1.jsx'; // Add this import
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -11,7 +13,11 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/select-role" element={<SelectRolePage />} />
-        <Route path="/dashboard" element={<Dashboard />} /> {/* Uncomment and add */}
+          <Route path="/dashboard" element={<Dashboard />} /> {/* Uncomment and add */}
+                  <Route path="/dashboard1" element={<Dashboard1 />} /> {/* Uncomment and add */}
+                
+
+
       </Routes>
     </BrowserRouter>
   );
