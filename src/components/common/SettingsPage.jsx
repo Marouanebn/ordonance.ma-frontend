@@ -3,14 +3,11 @@ import axios from "../../lib/api";
 
 const roleFields = {
     patient: [
+        { name: "cin", label: "CIN", type: "text" },
         { name: "telephone", label: "Téléphone", type: "tel" },
         { name: "date_naissance", label: "Date de naissance", type: "date" },
-        { name: "adresse", label: "Adresse", type: "text" },
-        { name: "ville", label: "Ville", type: "text" },
         { name: "genre", label: "Genre", type: "select", options: ["homme", "femme"] },
         { name: "numero_securite_sociale", label: "Numéro de sécurité sociale", type: "text" },
-        { name: "antecedents_medicaux", label: "Antécédents médicaux", type: "text" },
-        { name: "allergies", label: "Allergies", type: "text" },
     ],
     medecin: [
         { name: "telephone", label: "Téléphone", type: "tel" },
@@ -44,6 +41,9 @@ const SettingsPage = () => {
     });
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
+    // Remove file state and preview state
+    // const [files, setFiles] = useState({});
+    // const [previews, setPreviews] = useState({});
 
     useEffect(() => {
         axios.get("/user").then(res => {
@@ -70,17 +70,19 @@ const SettingsPage = () => {
     const handleExtraChange = e => {
         setExtra({ ...extra, [e.target.name]: e.target.value });
     };
+    // Remove handleFileChange
 
     const handleProfileSubmit = e => {
         e.preventDefault();
         setMessage(""); setError("");
         // Compose payload
-        let payload = { ...profile, ...extra };
         let url = "/user/profile";
         if (role === "patient") url = "/patient/profile";
         else if (role === "medecin") url = "/medecin/profile";
         else if (role === "pharmacien") url = "/pharmacien/profile";
         else if (role === "laboratoire") url = "/laboratoire/profile";
+        // Only send text fields
+        const payload = { ...profile, ...extra };
         axios.put(url, payload)
             .then(res => setMessage(res.data.message || "Profil mis à jour !"))
             .catch(err => setError(err.response?.data?.message || "Erreur lors de la mise à jour."));
@@ -103,6 +105,7 @@ const SettingsPage = () => {
     };
 
     const fields = roleFields[role] || [];
+    // Remove backendUrl variable and use the backend URL directly in all src/href
 
     return (
         <div className="settings-page" style={{ maxWidth: 600, margin: "0 auto", background: "#fff", borderRadius: 12, boxShadow: "0 2px 12px #0001", padding: 32 }}>
@@ -132,6 +135,39 @@ const SettingsPage = () => {
                         />
                     ))}
                 </div>
+                {/* Display file previews only, no upload fields */}
+                {(role === 'medecin' || role === 'pharmacien' || role === 'laboratoire') && (
+                    <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                        {extra.piece_identite_recto && (
+                            extra.piece_identite_recto.endsWith('.pdf') ? (
+                                <div><b>Pièce d'identité recto:</b> <a href={`http://localhost:8000/storage/${extra.piece_identite_recto}`} target="_blank" rel="noopener noreferrer">Voir PDF</a></div>
+                            ) : (
+                                <div><b>Pièce d'identité recto:</b><br /><img src={`http://localhost:8000/storage/${extra.piece_identite_recto}`} alt="Document identité recto" style={{ maxWidth: 120, display: 'block', marginTop: 4 }} /></div>
+                            )
+                        )}
+                        {extra.piece_identite_verso && (
+                            extra.piece_identite_verso.endsWith('.pdf') ? (
+                                <div><b>Pièce d'identité verso:</b> <a href={`http://localhost:8000/storage/${extra.piece_identite_verso}`} target="_blank" rel="noopener noreferrer">Voir PDF</a></div>
+                            ) : (
+                                <div><b>Pièce d'identité verso:</b><br /><img src={`http://localhost:8000/storage/${extra.piece_identite_verso}`} alt="Document identité verso" style={{ maxWidth: 120, display: 'block', marginTop: 4 }} /></div>
+                            )
+                        )}
+                        {extra.diplome && (
+                            extra.diplome.endsWith('.pdf') ? (
+                                <div><b>Diplôme:</b> <a href={`http://localhost:8000/storage/${extra.diplome}`} target="_blank" rel="noopener noreferrer">Voir PDF</a></div>
+                            ) : (
+                                <div><b>Diplôme:</b><br /><img src={`http://localhost:8000/storage/${extra.diplome}`} alt="Diplôme" style={{ maxWidth: 120, display: 'block', marginTop: 4 }} /></div>
+                            )
+                        )}
+                        {role === 'medecin' && extra.attestation_cnom && (
+                            extra.attestation_cnom.endsWith('.pdf') ? (
+                                <div><b>Attestation CNOM:</b> <a href={`http://localhost:8000/storage/${extra.attestation_cnom}`} target="_blank" rel="noopener noreferrer">Voir PDF</a></div>
+                            ) : (
+                                <div><b>Attestation CNOM:</b><br /><img src={`http://localhost:8000/storage/${extra.attestation_cnom}`} alt="Attestation CNOM" style={{ maxWidth: 120, display: 'block', marginTop: 4 }} /></div>
+                            )
+                        )}
+                    </div>
+                )}
                 <button type="submit" style={{ marginTop: 24, padding: "10px 24px", borderRadius: 6, background: "#2563eb", color: "#fff", border: "none", fontWeight: 600, fontSize: 16 }}>Enregistrer</button>
             </form>
 

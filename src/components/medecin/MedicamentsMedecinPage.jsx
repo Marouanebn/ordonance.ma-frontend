@@ -27,25 +27,21 @@ const MedicamentsMedecinPage = () => {
     setLoading(false);
   };
 
-  const handleEdit = (id) => {
-    navigate(`/medecin/medicaments/modifier/${id}`);
-  };
-
   const handleView = (id) => {
     navigate(`/medecin/medicaments/consulter/${id}`);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Voulez-vous vraiment supprimer ce médicament ?')) {
-      // Call delete API
-      api.delete(`/medicaments/${id}`)
-        .then(() => {
-          fetchMedicaments();
-        })
-        .catch(() => {
-          alert("Erreur lors de la suppression.");
-        });
+  const handleDelete = async (id) => {
+    if (!window.confirm('Voulez-vous vraiment supprimer ce médicament ?')) return;
+    setLoading(true);
+    setError('');
+    try {
+      await api.delete(`/medicaments/${id}`);
+      fetchMedicaments();
+    } catch (err) {
+      setError('Erreur lors de la suppression.');
     }
+    setLoading(false);
   };
 
   return (
@@ -88,7 +84,7 @@ const MedicamentsMedecinPage = () => {
                       <button className="icon-button" onClick={() => handleView(m.id)} title="Consulter">
                         <Eye size={16} />
                       </button>
-                      <button className="icon-button" onClick={() => handleEdit(m.id)} title="Modifier">
+                      <button className="icon-button" onClick={() => navigate(`/medecin/medicaments/modifier/${m.id}`)} title="Modifier">
                         <Pencil size={16} />
                       </button>
                       <button className="icon-button danger" onClick={() => handleDelete(m.id)} title="Supprimer">

@@ -14,6 +14,8 @@ import CreateMedicamentPage from './components/medecin/CreateMedicamentPage';
 import SettingsPage from './components/common/SettingsPage.jsx';
 import MesOrdonnancesPatientPage from './components/patient/MesOrdonnancesPatientPage.jsx';
 import OrdonnanceValidationPharmacienPage from './components/pharmacien/OrdonnanceValidationPharmacienPage.jsx';
+import EditOrdonancePage from './components/medecin/EditOrdonancePage';
+import EditMedicamentPage from './components/medecin/EditMedicamentPage';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -82,11 +84,16 @@ function App() {
           <Route path="/dashboard1" element={<Dashboard1 />} />
           <Route path="/medecin/ordonance" element={<OrdonanceMedecinPage />} />
           <Route path="/medecin/ordonance/creer" element={<CreateOrdonancePage />} />
+          <Route path="/medecin/ordonance/modifier/:id" element={<EditOrdonancePage />} />
           <Route path="/medecin/medicaments" element={<MedicamentsMedecinPage />} />
           <Route path="/medecin/medicaments/creer" element={<CreateMedicamentPage />} />
+          <Route path="/medecin/medicaments/modifier/:id" element={<EditMedicamentPage />} />
           <Route path="/parametres" element={<SettingsPage />} />
           <Route path="/patient/ordonnances" element={<MesOrdonnancesPatientPage />} />
           <Route path="/pharma/ordonance-validation" element={<OrdonnanceValidationPharmacienPage />} />
+          <Route path="/pharmacien/medicaments" element={<MedicamentsMedecinPage />} />
+          <Route path="/pharmacien/medicaments/creer" element={<CreateMedicamentPage />} />
+          <Route path="/pharmacien/medicaments/modifier/:id" element={<CreateMedicamentPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

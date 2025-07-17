@@ -69,7 +69,42 @@ function BaseForm({ roleSpecificFields, title }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
+
+  // Real-time validation functions
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'nom':
+        if (!value) return 'Nom requis';
+        return '';
+      case 'prenom':
+        if (!value) return 'Prénom requis';
+        return '';
+      case 'email':
+        if (!value) return 'Email requis';
+        if (!/^\S+@\S+\.\S+$/.test(value)) return 'Email invalide';
+        return '';
+      case 'telephone':
+        if (!value) return 'Téléphone requis';
+        if (!/^\+?\d{8,15}$/.test(value)) return 'Téléphone invalide';
+        return '';
+      case 'cin':
+        if (!value) return 'CIN requis';
+        if (value.length < 4) return 'CIN trop court';
+        return '';
+      case 'mot_de_passe':
+        if (!value) return 'Mot de passe requis';
+        if (value.length < 8) return 'Au moins 8 caractères';
+        return '';
+      case 'confirmation_mot_de_passe':
+        if (!value) return 'Confirmation requise';
+        if (value !== formData.mot_de_passe) return 'Les mots de passe ne correspondent pas';
+        return '';
+      default:
+        return '';
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -77,16 +112,61 @@ function BaseForm({ roleSpecificFields, title }) {
       ...formData,
       [name]: files ? files[0] : value,
     });
+    // Validate on change
+    setFieldErrors((prev) => ({ ...prev, [name]: validateField(name, files ? files[0] : value) }));
+    setError('');
   };
 
-  const nextStep = () => setStep((prev) => prev + 1);
+  const handleBlur = (e) => {
+    const { name, value, files } = e.target;
+    setFieldErrors((prev) => ({ ...prev, [name]: validateField(name, files ? files[0] : value) }));
+  };
+
+  // canGoNext now only checks validity, does not set state
+  const canGoNext = () => {
+    if (step !== 1) return true;
+    const required = ['nom', 'prenom', 'email', 'telephone', 'mot_de_passe', 'confirmation_mot_de_passe'];
+    return required.every((field) => !validateField(field, formData[field]));
+  };
+
+  // nextStep sets errors if invalid
+  const nextStep = () => {
+    if (step !== 1) {
+      setStep((prev) => prev + 1);
+      return;
+    }
+    const required = ['nom', 'prenom', 'email', 'telephone', 'mot_de_passe', 'confirmation_mot_de_passe'];
+    let newErrors = {};
+    let valid = true;
+    required.forEach((field) => {
+      const err = validateField(field, formData[field]);
+      if (err) valid = false;
+      newErrors[field] = err;
+    });
+    setFieldErrors((prev) => ({ ...prev, ...newErrors }));
+    if (valid) setStep((prev) => prev + 1);
+  };
   const prevStep = () => setStep((prev) => prev - 1);
 
+  // handleSubmit sets errors if invalid
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (step === 1) {
+      const required = ['nom', 'prenom', 'email', 'telephone', 'mot_de_passe', 'confirmation_mot_de_passe'];
+      let newErrors = {};
+      let valid = true;
+      required.forEach((field) => {
+        const err = validateField(field, formData[field]);
+        if (err) valid = false;
+        newErrors[field] = err;
+      });
+      setFieldErrors((prev) => ({ ...prev, ...newErrors }));
+      if (!valid) return;
+    }
     setLoading(true);
     setError('');
     setSuccess('');
+    setFieldErrors({});
     try {
       let payload = {};
       let role = '';
@@ -142,18 +222,27 @@ function BaseForm({ roleSpecificFields, title }) {
           password: formData.mot_de_passe,
           password_confirmation: formData.confirmation_mot_de_passe,
           role: 'patient',
+          cin: formData.cin,
           telephone: formData.telephone,
           date_naissance: formData.date_naissance,
-          adresse: formData.adresse,
-          ville: formData.ville,
           genre: formData.genre,
           numero_securite_sociale: formData.numero_securite_sociale,
-          antecedents_medicaux: formData.antecedents_medicaux,
-          allergies: formData.allergies,
         };
         role = 'patient';
       }
-      const response = await api.post('/register', payload);
+      // Use FormData for file uploads
+      const formPayload = new FormData();
+      Object.entries(payload).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) formPayload.append(key, value);
+      });
+      // Attach files if present (use correct backend field names)
+      if (formData.piece_identite_recto) formPayload.append('piece_identite_recto', formData.piece_identite_recto);
+      if (formData.piece_identite_verso) formPayload.append('piece_identite_verso', formData.piece_identite_verso);
+      if (formData.diplome) formPayload.append('diplome', formData.diplome);
+      if (formData.attestation_cnom) formPayload.append('attestation_cnom', formData.attestation_cnom);
+      const response = await api.post('/register', formPayload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       const { token } = response.data.data;
       localStorage.setItem('token', token);
       // Set roleMessage for consistency with login
@@ -182,37 +271,76 @@ function BaseForm({ roleSpecificFields, title }) {
         navigate(dashboardRoute);
       }, 1000);
     } catch (err) {
-      setError(
-        err.response?.data?.message || 'Erreur lors de l\'inscription. Veuillez réessayer.'
-      );
+      // Show specific field errors if present
+      if (err.response?.data?.errors) {
+        const errors = err.response.data.errors;
+        let newFieldErrors = { ...fieldErrors };
+        let errorMessages = [];
+        Object.entries(errors).forEach(([field, msgs]) => {
+          if (Array.isArray(msgs)) {
+            newFieldErrors[field] = msgs.join(' ');
+            errorMessages.push(...msgs);
+          } else if (typeof msgs === 'string') {
+            newFieldErrors[field] = msgs;
+            errorMessages.push(msgs);
+          }
+        });
+        setFieldErrors(newFieldErrors);
+        // Prefer backend 'message' if present, else join all error messages
+        if (err.response.data.message) {
+          setError(err.response.data.message);
+        } else {
+          setError(errorMessages.join(' '));
+        }
+      } else {
+        setError(
+          err.response?.data?.message || "Erreur lors de l'inscription. Veuillez réessayer."
+        );
+      }
     } finally {
       setLoading(false);
     }
   };
 
+  const isMedecin = title === 'Médecin';
+  const isPatient = title === 'Patient';
+  const totalSteps = isPatient ? 2 : isMedecin ? 4 : 5;
+
   return (
     <form onSubmit={handleSubmit} className="formulaire-inscription">
-      <h3>Étape {step} sur 5</h3>
+      <h3>Étape {step} sur {totalSteps}</h3>
       {step === 1 && (
         <>
-          <input type="text" name="nom" placeholder="Nom" onChange={handleChange} required />
-          <input type="text" name="prenom" placeholder="Prénom" onChange={handleChange} required />
-          <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-          <input type="tel" name="telephone" placeholder="Téléphone" onChange={handleChange} required />
-          <input type="password" name="mot_de_passe" placeholder="Mot de passe" onChange={handleChange} required />
-          <input type="password" name="confirmation_mot_de_passe" placeholder="Confirmation du mot de passe" onChange={handleChange} required />
+          <input type="text" name="nom" placeholder="Nom" onChange={handleChange} onBlur={handleBlur} required />
+          {fieldErrors.nom && <div className="error-message">{fieldErrors.nom}</div>}
+          <input type="text" name="prenom" placeholder="Prénom" onChange={handleChange} onBlur={handleBlur} required />
+          {fieldErrors.prenom && <div className="error-message">{fieldErrors.prenom}</div>}
+          <input type="email" name="email" placeholder="Email" onChange={handleChange} onBlur={handleBlur} required />
+          {fieldErrors.email && <div className="error-message">{fieldErrors.email}</div>}
+          {isPatient && (
+            <>
+              <input type="text" name="cin" placeholder="CIN" onChange={handleChange} required value={formData.cin || ''} />
+              {fieldErrors.cin && <div className="error-message">{fieldErrors.cin}</div>}
+            </>
+          )}
+          <input type="tel" name="telephone" placeholder="Téléphone" onChange={handleChange} onBlur={handleBlur} required />
+          {fieldErrors.telephone && <div className="error-message">{fieldErrors.telephone}</div>}
+          <input type="password" name="mot_de_passe" placeholder="Mot de passe" onChange={handleChange} onBlur={handleBlur} required />
+          {fieldErrors.mot_de_passe && <div className="error-message">{fieldErrors.mot_de_passe}</div>}
+          <input type="password" name="confirmation_mot_de_passe" placeholder="Confirmation du mot de passe" onChange={handleChange} onBlur={handleBlur} required />
+          {fieldErrors.confirmation_mot_de_passe && <div className="error-message">{fieldErrors.confirmation_mot_de_passe}</div>}
         </>
       )}
       {step === 2 && roleSpecificFields.step2(handleChange, formData)}
-      {step === 3 && roleSpecificFields.step3(handleChange, formData)}
-      {step === 4 && roleSpecificFields.step4(handleChange, formData)}
-      {step === 5 && roleSpecificFields.step5(handleChange, formData)}
+      {step === 3 && roleSpecificFields.step3 && roleSpecificFields.step3(handleChange, formData)}
+      {step === 4 && roleSpecificFields.step4 && roleSpecificFields.step4(handleChange, formData)}
+      {step === 5 && !isMedecin && roleSpecificFields.step5 && roleSpecificFields.step5(handleChange, formData)}
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
       <div className="step-buttons">
         {step > 1 && <button type="button" onClick={prevStep}>Précédent</button>}
-        {step < 5 && <button type="button" onClick={nextStep}>Suivant</button>}
-        {step === 5 && <button type="submit" disabled={loading}>{loading ? 'Inscription...' : 'Soumettre'}</button>}
+        {step < totalSteps && <button type="button" onClick={nextStep} disabled={step === 1 && !canGoNext()}>Suivant</button>}
+        {step === totalSteps && <button type="submit" disabled={loading}>{loading ? 'Inscription...' : 'S\'inscrire'}</button>}
       </div>
     </form>
   );
@@ -240,6 +368,18 @@ function MedecinForm() {
           <option value="actif">Actif</option>
           <option value="inactif">Inactif</option>
         </select>
+        <label>Pièce d'identité recto (PDF/JPG/PNG):
+          <input type="file" name="piece_identite_recto" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
+        </label>
+        <label>Pièce d'identité verso (PDF/JPG/PNG):
+          <input type="file" name="piece_identite_verso" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
+        </label>
+        <label>Diplôme (PDF/JPG/PNG):
+          <input type="file" name="diplome" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
+        </label>
+        <label>Attestation CNOM (PDF/JPG/PNG):
+          <input type="file" name="attestation_cnom" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
+        </label>
       </>
     ),
     step5: (handleChange, formData) => (<><p>Merci de vérifier toutes les informations avant de soumettre.</p></>),
@@ -265,11 +405,19 @@ function LaboratoireForm() {
     ),
     step4: (handleChange, formData) => (
       <>
-        <input type="text" name="numero_autorisation" placeholder="Numéro d'autorisation du laboratoire" onChange={handleChange} required value={formData.numero_autorisation || ''} />
         <select name="statut_laboratoire" onChange={handleChange} required value={formData.statut_laboratoire || 'actif'}>
           <option value="actif">Actif</option>
           <option value="inactif">Inactif</option>
         </select>
+        <label>Pièce d'identité recto (PDF/JPG/PNG):
+          <input type="file" name="piece_identite_recto" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
+        </label>
+        <label>Pièce d'identité verso (PDF/JPG/PNG):
+          <input type="file" name="piece_identite_verso" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
+        </label>
+        <label>Diplôme (PDF/JPG/PNG):
+          <input type="file" name="diplome" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
+        </label>
       </>
     ),
     step5: (handleChange, formData) => (<><p>Merci de vérifier toutes les informations avant de soumettre.</p></>),
@@ -298,6 +446,15 @@ function PharmacienForm() {
           <option value="actif">Actif</option>
           <option value="inactif">Inactif</option>
         </select>
+        <label>Pièce d'identité recto (PDF/JPG/PNG):
+          <input type="file" name="piece_identite_recto" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
+        </label>
+        <label>Pièce d'identité verso (PDF/JPG/PNG):
+          <input type="file" name="piece_identite_verso" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
+        </label>
+        <label>Diplôme (PDF/JPG/PNG):
+          <input type="file" name="diplome" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
+        </label>
       </>
     ),
     step5: (handleChange, formData) => (<><p>Merci de vérifier toutes les informations avant de soumettre.</p></>),
@@ -310,28 +467,16 @@ function PatientForm() {
   const roleSpecificFields = {
     step2: (handleChange, formData) => (
       <>
-        <input type="tel" name="telephone" placeholder="Téléphone" onChange={handleChange} required value={formData.telephone || ''} />
         <input type="date" name="date_naissance" placeholder="Date de naissance" onChange={handleChange} required value={formData.date_naissance || ''} />
-      </>
-    ),
-    step3: (handleChange, formData) => (
-      <>
-        <input type="text" name="adresse" placeholder="Adresse" onChange={handleChange} required value={formData.adresse || ''} />
-        <input type="text" name="ville" placeholder="Ville" onChange={handleChange} required value={formData.ville || ''} />
         <select name="genre" onChange={handleChange} required value={formData.genre || 'homme'}>
           <option value="homme">Homme</option>
           <option value="femme">Femme</option>
         </select>
       </>
     ),
-    step4: (handleChange, formData) => (
-      <>
-        <input type="text" name="numero_securite_sociale" placeholder="Numéro de sécurité sociale (optionnel)" onChange={handleChange} value={formData.numero_securite_sociale || ''} />
-        <input type="text" name="antecedents_medicaux" placeholder="Antécédents médicaux (optionnel)" onChange={handleChange} value={formData.antecedents_medicaux || ''} />
-        <input type="text" name="allergies" placeholder="Allergies (optionnel)" onChange={handleChange} value={formData.allergies || ''} />
-      </>
-    ),
-    step5: (handleChange, formData) => (<><p>Merci de vérifier toutes les informations avant de soumettre.</p></>),
+    step3: undefined,
+    step4: undefined,
+    step5: undefined,
   };
   return <BaseForm roleSpecificFields={roleSpecificFields} title="Patient" />;
 }

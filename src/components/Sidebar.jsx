@@ -37,7 +37,6 @@ const Sidebar = () => {
       items: [
         { text: "Accueil patient", path: "/patient-home" },
         { text: "Mes ordonnances", path: "/patient-ordonnances" },
-        { text: "Télécharger une ordonnance", path: "/patient-download" },
         { text: "Profil personnel", path: "/patient-profil" },
         { text: "Historique médical", path: "/patient-historique" },
         { text: "Support / Assistance", path: "/patient-support" },

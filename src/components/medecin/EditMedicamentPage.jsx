@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../lib/api';
-import SidebarPharmacien from '../SidebarPharmacien';
+import SidebarMedecin from '../SidebarMedecin';
 import Topbar from '../Topbar';
-import './ordonnance-pharmacien.css';
+import './CreateMedicamentPage.css';
 
-const PharmacienMedicamentForm = ({ isEdit }) => {
+const EditMedicamentPage = () => {
     const { id } = useParams();
     const [form, setForm] = useState({ nom: '', quantite: 1, disponible: true });
-    const [loading, setLoading] = useState(isEdit);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [submitting, setSubmitting] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isEdit && id) {
-            fetchData();
-        }
-    }, [isEdit, id]);
+        fetchData();
+    }, []);
 
     const fetchData = async () => {
         setLoading(true);
@@ -48,50 +46,29 @@ const PharmacienMedicamentForm = ({ isEdit }) => {
         setSubmitting(true);
         setError('');
         try {
-            if (isEdit && id) {
-                await api.put(`/medicaments/${id}`, {
-                    nom: form.nom,
-                    quantite: Number(form.quantite),
-                    disponible: form.disponible,
-                });
-            } else {
-                await api.post('/medicaments', {
-                    nom: form.nom,
-                    quantite: Number(form.quantite),
-                    disponible: form.disponible,
-                });
-            }
-            navigate('/pharmacien/medicaments');
+            await api.put(`/medicaments/${id}`, {
+                nom: form.nom,
+                quantite: Number(form.quantite),
+                disponible: form.disponible,
+            });
+            navigate('/medecin/medicaments');
         } catch (err) {
-            setError('Erreur lors de la sauvegarde.');
-        }
-        setSubmitting(false);
-    };
-
-    const handleDelete = async () => {
-        if (!window.confirm('Voulez-vous vraiment supprimer ce médicament ?')) return;
-        setSubmitting(true);
-        setError('');
-        try {
-            await api.delete(`/medicaments/${id}`);
-            navigate('/pharmacien/medicaments');
-        } catch (err) {
-            setError('Erreur lors de la suppression.');
+            setError('Erreur lors de la modification.');
         }
         setSubmitting(false);
     };
 
     return (
         <div className="page-container">
-            <SidebarPharmacien />
+            <SidebarMedecin />
             <div className="page-content">
-                <Topbar title={isEdit ? 'Modifier un médicament' : 'Créer un médicament'} />
+                <Topbar title="Modifier un médicament" />
                 <div className="content-inner">
                     <div className="header-section">
-                        <button className="btn-back-icon" onClick={() => navigate('/pharmacien/medicaments')}>
+                        <button className="btn-back-icon" onClick={() => navigate('/medecin/medicaments')}>
                             ← Retour
                         </button>
-                        <h2 className="page-title">{isEdit ? 'Modifier un médicament' : 'Créer un médicament'}</h2>
+                        <h2 className="page-title">Modifier un médicament</h2>
                     </div>
                     {loading ? (
                         <div>Chargement...</div>
@@ -135,14 +112,9 @@ const PharmacienMedicamentForm = ({ isEdit }) => {
                             </div>
                             {error && <div className="alert alert-danger">{error}</div>}
                             <div className="form-actions">
-                                <button type="button" className="btn btn-secondary" onClick={() => navigate('/pharmacien/medicaments')}>
+                                <button type="button" className="btn btn-secondary" onClick={() => navigate('/medecin/medicaments')}>
                                     Annuler
                                 </button>
-                                {isEdit && (
-                                    <button type="button" className="btn btn-danger" onClick={handleDelete} disabled={submitting}>
-                                        Supprimer
-                                    </button>
-                                )}
                                 <button type="submit" className="btn btn-primary" disabled={submitting}>
                                     {submitting ? 'Enregistrement...' : 'Enregistrer'}
                                 </button>
@@ -155,7 +127,4 @@ const PharmacienMedicamentForm = ({ isEdit }) => {
     );
 };
 
-export default function CreateMedicamentPage() {
-    const { id } = useParams();
-    return <PharmacienMedicamentForm isEdit={!!id} />;
-} 
+export default EditMedicamentPage; 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import api from "../../lib/api";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { CheckCircle, Loader2, Download } from "lucide-react";
 import "./ordonnance-pharmacien.css";
 
 const OrdonnanceValidationPharmacienPage = () => {

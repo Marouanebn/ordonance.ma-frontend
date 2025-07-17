@@ -10,10 +10,41 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
+
+  // Real-time validation
+  const validateEmail = (value) => {
+    if (!value) return 'Email requis';
+    // Simple email regex
+    if (!/^\S+@\S+\.\S+$/.test(value)) return 'Email invalide';
+    return '';
+  };
+  const validatePassword = (value) => {
+    if (!value) return 'Mot de passe requis';
+    return '';
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setEmailError(validateEmail(e.target.value));
+    setError('');
+  };
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    setPasswordError(validatePassword(e.target.value));
+    setError('');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Validate before submit
+    const emailErr = validateEmail(email);
+    const passErr = validatePassword(password);
+    setEmailError(emailErr);
+    setPasswordError(passErr);
+    if (emailErr || passErr) return;
     setLoading(true);
     setError('');
     try {
@@ -46,9 +77,11 @@ function LoginPage() {
       localStorage.setItem('roleMessage', roleMsg);
       navigate(dashboardRoute);
     } catch (err) {
-      setError(
-        err.response?.data?.message || 'Erreur lors de la connexion. Veuillez réessayer.'
-      );
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError('Erreur lors de la connexion. Veuillez réessayer.');
+      }
     } finally {
       setLoading(false);
     }
@@ -80,8 +113,10 @@ function LoginPage() {
               placeholder="Votre Adresse Email"
               required
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={handleEmailChange}
+              onBlur={() => setEmailError(validateEmail(email))}
             />
+            {emailError && <div className="error-message">{emailError}</div>}
 
             <label htmlFor="password">Mot de passe</label>
             <div className="password-wrapper">
@@ -91,7 +126,8 @@ function LoginPage() {
                 placeholder="Mot de passe"
                 required
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={handlePasswordChange}
+                onBlur={() => setPasswordError(validatePassword(password))}
               />
               <span
                 className="toggle-icon"
@@ -101,6 +137,7 @@ function LoginPage() {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
+            {passwordError && <div className="error-message">{passwordError}</div>}
 
             {error && <div className="error-message">{error}</div>}
 
