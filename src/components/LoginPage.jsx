@@ -41,6 +41,7 @@ function LoginPage() {
           roleMsg = 'Je suis admin';
           dashboardRoute = '/dashboard';
         }
+        localStorage.setItem('userRole', role); // Store the actual role
       }
       localStorage.setItem('roleMessage', roleMsg);
       navigate(dashboardRoute);

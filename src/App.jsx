@@ -31,7 +31,10 @@ function getUserRole() {
   try {
     const token = localStorage.getItem('token');
     if (!token) return null;
-    // Try to get role from localStorage (set on login)
+    // Prefer userRole if set
+    const userRole = localStorage.getItem('userRole');
+    if (userRole) return userRole;
+    // Fallback to roleMessage for backward compatibility
     const roleMsg = localStorage.getItem('roleMessage');
     if (roleMsg) {
       if (roleMsg.includes('médecin')) return 'medecin';

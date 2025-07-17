@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './SelectRolePage.css';
 import { FaUserMd, FaUser, FaFlask, FaPills } from 'react-icons/fa';
 import api from '../lib/api';
+import { useNavigate } from 'react-router-dom';
 
 const roles = [
   { name: 'Médecin', icon: <FaUserMd /> },
@@ -68,6 +69,7 @@ function BaseForm({ roleSpecificFields, title }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -87,6 +89,7 @@ function BaseForm({ roleSpecificFields, title }) {
     setSuccess('');
     try {
       let payload = {};
+      let role = '';
       if (title === 'Médecin') {
         payload = {
           name: formData.nom + ' ' + formData.prenom,
@@ -101,6 +104,7 @@ function BaseForm({ roleSpecificFields, title }) {
           ville_medecin: formData.ville,
           statut_medecin: formData.statut_medecin || 'actif',
         };
+        role = 'medecin';
       } else if (title === 'Pharmacien') {
         payload = {
           name: formData.nom + ' ' + formData.prenom,
@@ -114,6 +118,7 @@ function BaseForm({ roleSpecificFields, title }) {
           ville_pharmacien: formData.ville,
           statut_pharmacien: formData.statut_pharmacien || 'actif',
         };
+        role = 'pharmacien';
       } else if (title === 'Laboratoire') {
         payload = {
           name: formData.nom_responsable,
@@ -129,6 +134,7 @@ function BaseForm({ roleSpecificFields, title }) {
           numero_autorisation: formData.numero_autorisation,
           statut_laboratoire: formData.statut_laboratoire || 'actif',
         };
+        role = 'laboratoire';
       } else if (title === 'Patient') {
         payload = {
           name: formData.nom + ' ' + formData.prenom,
@@ -145,14 +151,36 @@ function BaseForm({ roleSpecificFields, title }) {
           antecedents_medicaux: formData.antecedents_medicaux,
           allergies: formData.allergies,
         };
+        role = 'patient';
       }
       const response = await api.post('/register', payload);
       const { token } = response.data.data;
       localStorage.setItem('token', token);
+      // Set roleMessage for consistency with login
+      let roleMsg = '';
+      let dashboardRoute = '/dashboard';
+      if (role === 'medecin') {
+        roleMsg = 'Je suis médecin';
+        dashboardRoute = '/dashboard-medecin';
+      } else if (role === 'patient') {
+        roleMsg = 'Je suis patient';
+        dashboardRoute = '/dashboard-patient';
+      } else if (role === 'pharmacien') {
+        roleMsg = 'Je suis pharmacien';
+        dashboardRoute = '/dashboard-pharmacien';
+      } else if (role === 'laboratoire') {
+        roleMsg = 'Je suis laboratoire';
+        dashboardRoute = '/dashboard-laboratoire';
+      } else if (role === 'admin') {
+        roleMsg = 'Je suis admin';
+        dashboardRoute = '/dashboard';
+      }
+      localStorage.setItem('roleMessage', roleMsg);
+      localStorage.setItem('userRole', role);
       setSuccess('Inscription réussie ! Redirection...');
       setTimeout(() => {
-        window.location.href = '/';
-      }, 1500);
+        navigate(dashboardRoute);
+      }, 1000);
     } catch (err) {
       setError(
         err.response?.data?.message || 'Erreur lors de l\'inscription. Veuillez réessayer.'
