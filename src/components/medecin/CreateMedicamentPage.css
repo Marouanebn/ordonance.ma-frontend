@@ -1,0 +1,115 @@
+/* General Layout */
+.page-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 260px;
+  background-color: #f9f9f9;
+}
+
+.content-inner {
+  padding: 30px;
+}
+
+/* Header Section */
+.header-section {
+  position: relative;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 auto;
+}
+
+/* Retour Button with Icon */
+.btn-back-icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-back-icon:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+/* Form */
+.medicament-form {
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.06);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.mb-2 {
+  margin-bottom: 20px;
+}
+
+.alert {
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+button {
+  min-width: 120px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

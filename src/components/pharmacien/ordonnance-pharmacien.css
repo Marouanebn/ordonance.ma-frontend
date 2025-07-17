@@ -1,0 +1,89 @@
+.ordonnance-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #0001;
+  padding: 32px;
+}
+
+.ordonnance-title {
+  text-align: center;
+  color: #6f42c1;
+  font-weight: bold;
+  margin-bottom: 24px;
+}
+
+.ordonnance-search-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.ordonnance-error {
+  color: #dc3545;
+  margin-top: 10px;
+}
+
+.ordonnance-success {
+  color: #198754;
+  margin-top: 10px;
+}
+
+.ordonnance-result ul {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.ordonnance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.ordonnance-table th,
+.ordonnance-table td {
+  padding: 10px;
+  border: 1px solid #eee;
+  vertical-align: top;
+}
+
+.ordonnance-table thead {
+  background-color: #f8f9fa;
+}
+
+.ordonnance-subtitle {
+  margin-bottom: 16px;
+  font-weight: bold;
+  color: #6f42c1;
+}
+
+.ordonnance-icon-button {
+  background: none;
+  border: none;
+  color: #28a745;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ordonnance-icon-button:hover {
+  color: #218838;
+}
+
+.ordonnance-icon-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
