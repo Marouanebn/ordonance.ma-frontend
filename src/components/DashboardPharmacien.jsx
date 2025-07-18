@@ -5,6 +5,8 @@ import SettingsPage from "./common/SettingsPage.jsx";
 import OrdonnanceValidationPharmacienPage from "./pharmacien/OrdonnanceValidationPharmacienPage.jsx";
 import "./topbar.css";
 import api from "../lib/api";
+import Footer from "./Footer.jsx"; // adjust path if needed
+
 
 const DashboardPharmacien = () => {
     const [roleMessage, setRoleMessage] = useState("");
@@ -104,6 +106,8 @@ const DashboardPharmacien = () => {
                         </>
                     )}
                 </div>
+                          <Footer />
+
             </div>
         </div>
     );

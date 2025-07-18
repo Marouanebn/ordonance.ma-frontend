@@ -3,6 +3,7 @@ import api from "../../lib/api";
 import { CheckCircle, Loader2, Download } from "lucide-react";
 import "./ordonnance-pharmacien.css";
 
+
 const OrdonnanceValidationPharmacienPage = () => {
     const [query, setQuery] = useState("");
     const [patients, setPatients] = useState([]);
@@ -170,6 +171,7 @@ const OrdonnanceValidationPharmacienPage = () => {
                     </button>
                 </div>
             )}
+
         </div>
     );
 };

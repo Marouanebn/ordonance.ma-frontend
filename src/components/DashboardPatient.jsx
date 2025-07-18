@@ -4,6 +4,7 @@ import Topbar from "./Topbar.jsx";
 import SettingsPage from "./common/SettingsPage.jsx";
 import MesOrdonnancesPatientPage from "./patient/MesOrdonnancesPatientPage.jsx";
 import "./topbar.css";
+import Footer from "./Footer.jsx"; 
 
 const DashboardPatient = () => {
     const [roleMessage, setRoleMessage] = useState("");
@@ -41,6 +42,8 @@ const DashboardPatient = () => {
                         </>
                     )}
                 </div>
+
+               <Footer />
             </div>
         </div>
     );

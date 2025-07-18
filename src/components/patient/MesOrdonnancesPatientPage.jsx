@@ -1,64 +1,122 @@
 import React, { useEffect, useState } from "react";
 import api from "../../lib/api";
-import { Download } from 'lucide-react';
+import { Download } from "lucide-react";
+import "./MesOrdonnancesPatientPage.css";
 
 const MesOrdonnancesPatientPage = () => {
-    const [ordonnances, setOrdonnances] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+  const [ordonnances, setOrdonnances] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [selectedIds, setSelectedIds] = useState([]);
 
-    useEffect(() => {
-        api.get("/patient/ordonnances")
-            .then(res => {
-                setOrdonnances(res.data.data?.data || []);
-                setLoading(false);
-            })
-            .catch(() => {
-                setError("Erreur lors du chargement des ordonnances.");
-                setLoading(false);
-            });
-    }, []);
+  useEffect(() => {
+    api
+      .get("/patient/ordonnances")
+      .then((res) => {
+        setOrdonnances(res.data.data?.data || []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Erreur lors du chargement des ordonnances.");
+        setLoading(false);
+      });
+  }, []);
 
-    return (
-        <div style={{ maxWidth: 900, margin: "0 auto", background: "#fff", borderRadius: 12, boxShadow: "0 2px 12px #0001", padding: 32 }}>
-            <h2 style={{ textAlign: "center", marginBottom: 24 }}>Mes Ordonnances</h2>
-            {loading && <div>Chargement...</div>}
-            {error && <div style={{ color: "#dc3545" }}>{error}</div>}
-            {!loading && !error && ordonnances.length === 0 && <div>Aucune ordonnance trouvée.</div>}
-            {!loading && !error && ordonnances.length > 0 && (
-                <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                    <thead>
-                        <tr style={{ background: "#f5f5f5" }}>
-                            <th style={{ padding: 10, border: "1px solid #eee" }}>Date</th>
-                            <th style={{ padding: 10, border: "1px solid #eee" }}>Statut</th>
-                            <th style={{ padding: 10, border: "1px solid #eee" }}>Médecin</th>
-                            <th style={{ padding: 10, border: "1px solid #eee" }}>Médicaments</th>
-                            <th style={{ padding: 10, border: "1px solid #eee" }}>Détail</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {ordonnances.map(ord => (
-                            <tr key={ord.id} style={{ borderBottom: "1px solid #eee" }}>
-                                <td style={{ padding: 10 }}>{new Date(ord.created_at).toLocaleDateString()}</td>
-                                <td style={{ padding: 10 }}>{ord.status || '-'}</td>
-                                <td style={{ padding: 10 }}>{ord.medecin?.user?.name || "-"}</td>
-                                <td style={{ padding: 10 }}>
-                                    {ord.medicaments && ord.medicaments.length > 0 ? (
-                                        <ul style={{ margin: 0, paddingLeft: 18 }}>
-                                            {ord.medicaments.map(med => (
-                                                <li key={med.id}>{med.nom} {med.pivot?.quantite ? `(x${med.pivot.quantite})` : ''}</li>
-                                            ))}
-                                        </ul>
-                                    ) : "-"}
-                                </td>
-                                <td style={{ padding: 10 }}>{ord.detail || ord.remarques || "-"}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
-        </div>
+  const toggleSelection = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === ordonnances.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(ordonnances.map((ord) => ord.id));
+    }
+  };
+
+  return (
+    <div className="container">
+      <div className="header">
+        <h2 className="title">Ordonnances archivées</h2>
+        <button className="download-button">Télécharger la sélection</button>
+      </div>
+
+      {loading && <div>Chargement...</div>}
+      {error && <div className="text-red-500">{error}</div>}
+      {!loading && !error && ordonnances.length === 0 && (
+        <div>Aucune ordonnance trouvée.</div>
+      )}
+
+      {!loading && !error && ordonnances.length > 0 && (
+        <div className="table-container">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.length === ordonnances.length}
+                    onChange={toggleSelectAll}
+                  />
+                </th>
+                <th>Date</th>
+                <th>Statut</th>
+                <th>Médecin</th>
+                <th>Médicaments</th>
+                <th>Détail</th>
+                <th>Téléchargement</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ordonnances.map((ord) => (
+                <tr key={ord.id}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.includes(ord.id)}
+                      onChange={() => toggleSelection(ord.id)}
+                    />
+                  </td>
+                  <td>{new Date(ord.created_at).toLocaleDateString()}</td>
+                  <td>
+                    <div className="status-indicator">
+                      <span className="dot"></span>
+                      Archivée
+                    </div>
+                  </td>
+                  <td>{ord.medecin?.user?.name || "-"}</td>
+                  <td>
+                    {ord.medicaments && ord.medicaments.length > 0 ? (
+                      <ul className="list-disc pl-4">
+                        {ord.medicaments.map((med) => (
+                          <li key={med.id}>
+                            {med.nom}{" "}
+                            {med.pivot?.quantite
+                              ? `(x${med.pivot.quantite})`
+                              : ""}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                  <td>{ord.detail || ord.remarques || "-"}</td>
+                  <td>
+                    <button className="download-icon-button">
+                      <Download size={18} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
 };
 
-export default MesOrdonnancesPatientPage; 
+export default MesOrdonnancesPatientPage;

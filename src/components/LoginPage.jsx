@@ -92,7 +92,7 @@ function LoginPage() {
       <div className="login-container">
         {/* Left Side */}
         <div className="login-left">
-          <img src="/logo-white.png" alt="Ordonnance Logo" />
+          <img src="./src/assets/1.png" alt="Ordonnance Logo" />
           <h1>WELCOME</h1>
           <p className="description">
             Lorem Ipsum est un texte d’espace réservé couramment utilisé dans les industries graphique, imprimée et éditoriale.
@@ -102,7 +102,7 @@ function LoginPage() {
 
         {/* Right Side */}
         <div className="login-right">
-          <img src="/logo-colored.png" alt="Ordonnance Logo" className="logo-small" />
+          <img src="./src/assets/image.png" alt="Ordonnance Logo" className="logo-small" />
           <h3 className="form-title">Se connecter</h3>
 
           <form className="login-form" onSubmit={handleSubmit}>

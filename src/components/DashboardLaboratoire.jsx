@@ -3,6 +3,7 @@ import SidebarLaboratoire from "./SidebarLaboratoire.jsx";
 import Topbar from "./Topbar.jsx";
 import SettingsPage from "./common/SettingsPage.jsx";
 import "./topbar.css";
+import Footer from "./Footer.jsx"; // adjust path if needed
 
 const DashboardLaboratoire = () => {
     const [roleMessage, setRoleMessage] = useState("");
@@ -33,6 +34,8 @@ const DashboardLaboratoire = () => {
                         </>
                     )}
                 </div>
+                          <Footer />
+
             </div>
         </div>
     );

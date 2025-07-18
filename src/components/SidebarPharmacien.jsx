@@ -78,7 +78,7 @@ const SidebarPharmacien = ({ onMenuSelect }) => {
 
       <aside className={`sidebar-medecin ${isOpen ? "open" : ""}`}>
         <div className="sidebar-logo">
-          <img src="/logo.svg" alt="Ordonnance.ma" />
+          <img src="./src/assets/2.png" alt="Ordonnance.ma" />
         </div>
 
         <ul className="sidebar-menu">

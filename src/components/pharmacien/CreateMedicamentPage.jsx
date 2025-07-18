@@ -5,6 +5,7 @@ import SidebarPharmacien from '../SidebarPharmacien';
 import Topbar from '../Topbar';
 import './ordonnance-pharmacien.css';
 
+
 const PharmacienMedicamentForm = ({ isEdit }) => {
     const { id } = useParams();
     const [form, setForm] = useState({ nom: '', quantite: 1, disponible: true });
@@ -150,6 +151,7 @@ const PharmacienMedicamentForm = ({ isEdit }) => {
                         </form>
                     )}
                 </div>
+
             </div>
         </div>
     );

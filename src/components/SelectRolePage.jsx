@@ -21,7 +21,7 @@ function SelectRolePage() {
       <div className="select-container">
         {/* Left Side */}
         <div className="select-left">
-          <FaPills size={50} color="#fff" style={{ marginBottom: '2rem' }} />
+          <img src="./src/assets/1.png" alt="Ordonnance.ma" />
           <h1>Bienvenue</h1>
           <p className="description">
             Lorem Ipsum est un texte d’espace réservé couramment utilisé dans les industries graphique, imprimée et éditoriale.
@@ -310,26 +310,40 @@ function BaseForm({ roleSpecificFields, title }) {
     <form onSubmit={handleSubmit} className="formulaire-inscription">
       <h3>Étape {step} sur {totalSteps}</h3>
       {step === 1 && (
-        <>
-          <input type="text" name="nom" placeholder="Nom" onChange={handleChange} onBlur={handleBlur} required />
-          {fieldErrors.nom && <div className="error-message">{fieldErrors.nom}</div>}
-          <input type="text" name="prenom" placeholder="Prénom" onChange={handleChange} onBlur={handleBlur} required />
-          {fieldErrors.prenom && <div className="error-message">{fieldErrors.prenom}</div>}
-          <input type="email" name="email" placeholder="Email" onChange={handleChange} onBlur={handleBlur} required />
-          {fieldErrors.email && <div className="error-message">{fieldErrors.email}</div>}
-          {isPatient && (
-            <>
-              <input type="text" name="cin" placeholder="CIN" onChange={handleChange} required value={formData.cin || ''} />
-              {fieldErrors.cin && <div className="error-message">{fieldErrors.cin}</div>}
-            </>
-          )}
-          <input type="tel" name="telephone" placeholder="Téléphone" onChange={handleChange} onBlur={handleBlur} required />
-          {fieldErrors.telephone && <div className="error-message">{fieldErrors.telephone}</div>}
-          <input type="password" name="mot_de_passe" placeholder="Mot de passe" onChange={handleChange} onBlur={handleBlur} required />
-          {fieldErrors.mot_de_passe && <div className="error-message">{fieldErrors.mot_de_passe}</div>}
-          <input type="password" name="confirmation_mot_de_passe" placeholder="Confirmation du mot de passe" onChange={handleChange} onBlur={handleBlur} required />
-          {fieldErrors.confirmation_mot_de_passe && <div className="error-message">{fieldErrors.confirmation_mot_de_passe}</div>}
-        </>
+  <>
+  <label htmlFor="nom">Nom</label>
+  <input type="text" id="nom" name="nom" placeholder="Nom" onChange={handleChange} onBlur={handleBlur} required />
+  {fieldErrors.nom && <div className="error-message">{fieldErrors.nom}</div>}
+
+  <label htmlFor="prenom">Prénom</label>
+  <input type="text" id="prenom" name="prenom" placeholder="Prénom" onChange={handleChange} onBlur={handleBlur} required />
+  {fieldErrors.prenom && <div className="error-message">{fieldErrors.prenom}</div>}
+
+  <label htmlFor="email">Email</label>
+  <input type="email" id="email" name="email" placeholder="Email" onChange={handleChange} onBlur={handleBlur} required />
+  {fieldErrors.email && <div className="error-message">{fieldErrors.email}</div>}
+
+  {isPatient && (
+    <>
+      <label htmlFor="cin">CIN</label>
+      <input type="text" id="cin" name="cin" placeholder="CIN" onChange={handleChange} required value={formData.cin || ''} />
+      {fieldErrors.cin && <div className="error-message">{fieldErrors.cin}</div>}
+    </>
+  )}
+
+  <label htmlFor="telephone">Téléphone</label>
+  <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" onChange={handleChange} onBlur={handleBlur} required />
+  {fieldErrors.telephone && <div className="error-message">{fieldErrors.telephone}</div>}
+
+  <label htmlFor="mot_de_passe">Mot de passe</label>
+  <input type="password" id="mot_de_passe" name="mot_de_passe" placeholder="Mot de passe" onChange={handleChange} onBlur={handleBlur} required />
+  {fieldErrors.mot_de_passe && <div className="error-message">{fieldErrors.mot_de_passe}</div>}
+
+  <label htmlFor="confirmation_mot_de_passe">Confirmation du mot de passe</label>
+  <input type="password" id="confirmation_mot_de_passe" name="confirmation_mot_de_passe" placeholder="Confirmation du mot de passe" onChange={handleChange} onBlur={handleBlur} required />
+  {fieldErrors.confirmation_mot_de_passe && <div className="error-message">{fieldErrors.confirmation_mot_de_passe}</div>}
+</>
+
       )}
       {step === 2 && roleSpecificFields.step2(handleChange, formData)}
       {step === 3 && roleSpecificFields.step3 && roleSpecificFields.step3(handleChange, formData)}
@@ -351,41 +365,135 @@ function MedecinForm() {
   const roleSpecificFields = {
     step2: (handleChange, formData) => (
       <>
-        <input type="text" name="telephone" placeholder="Téléphone" onChange={handleChange} required value={formData.telephone || ''} />
-        <input type="text" name="numero_cnom" placeholder="Numéro CNOM" onChange={handleChange} required value={formData.numero_cnom || ''} />
+        <label htmlFor="telephone">Téléphone :</label>
+        <input
+          type="text"
+          id="telephone"
+          name="telephone"
+          placeholder="Téléphone"
+          onChange={handleChange}
+          required
+          value={formData.telephone || ''}
+        />
+
+        <label htmlFor="numero_cnom">Numéro CNOM :</label>
+        <input
+          type="text"
+          id="numero_cnom"
+          name="numero_cnom"
+          placeholder="Numéro CNOM"
+          onChange={handleChange}
+          required
+          value={formData.numero_cnom || ''}
+        />
       </>
     ),
+
     step3: (handleChange, formData) => (
       <>
-        <input type="text" name="specialite" placeholder="Spécialité" onChange={handleChange} required value={formData.specialite || ''} />
-        <input type="text" name="adresse_cabinet" placeholder="Adresse du cabinet" onChange={handleChange} required value={formData.adresse_cabinet || ''} />
-        <input type="text" name="ville" placeholder="Ville" onChange={handleChange} required value={formData.ville || ''} />
+        <label htmlFor="specialite">Spécialité :</label>
+        <input
+          type="text"
+          id="specialite"
+          name="specialite"
+          placeholder="Spécialité"
+          onChange={handleChange}
+          required
+          value={formData.specialite || ''}
+        />
+
+        <label htmlFor="adresse_cabinet">Adresse du cabinet :</label>
+        <input
+          type="text"
+          id="adresse_cabinet"
+          name="adresse_cabinet"
+          placeholder="Adresse du cabinet"
+          onChange={handleChange}
+          required
+          value={formData.adresse_cabinet || ''}
+        />
+
+        <label htmlFor="ville">Ville :</label>
+        <input
+          type="text"
+          id="ville"
+          name="ville"
+          placeholder="Ville"
+          onChange={handleChange}
+          required
+          value={formData.ville || ''}
+        />
       </>
     ),
+
     step4: (handleChange, formData) => (
       <>
-        <select name="statut_medecin" onChange={handleChange} required value={formData.statut_medecin || 'actif'}>
-          <option value="actif">Actif</option>
-          <option value="inactif">Inactif</option>
-        </select>
-        <label>Pièce d'identité recto (PDF/JPG/PNG):
-          <input type="file" name="piece_identite_recto" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
-        </label>
-        <label>Pièce d'identité verso (PDF/JPG/PNG):
-          <input type="file" name="piece_identite_verso" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
-        </label>
-        <label>Diplôme (PDF/JPG/PNG):
-          <input type="file" name="diplome" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
-        </label>
-        <label>Attestation CNOM (PDF/JPG/PNG):
-          <input type="file" name="attestation_cnom" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
-        </label>
+     <label htmlFor="statut_medecin">Statut</label>
+<select
+  id="statut_medecin"
+  name="statut_medecin"
+  onChange={handleChange}
+  required
+  value={formData.statut_medecin || 'actif'}
+  className="styled-select"
+>
+  <option value="actif">Actif</option>
+  <option value="inactif">Inactif</option>
+</select>
+
+
+        <label htmlFor="piece_identite_recto">Pièce d'identité recto (PDF/JPG/PNG) :</label>
+        <input
+          type="file"
+          id="piece_identite_recto"
+          name="piece_identite_recto"
+          accept=".pdf,.jpg,.jpeg,.png"
+          onChange={handleChange}
+          required
+        />
+
+        <label htmlFor="piece_identite_verso">Pièce d'identité verso (PDF/JPG/PNG) :</label>
+        <input
+          type="file"
+          id="piece_identite_verso"
+          name="piece_identite_verso"
+          accept=".pdf,.jpg,.jpeg,.png"
+          onChange={handleChange}
+          required
+        />
+
+        <label htmlFor="diplome">Diplôme (PDF/JPG/PNG) :</label>
+        <input
+          type="file"
+          id="diplome"
+          name="diplome"
+          accept=".pdf,.jpg,.jpeg,.png"
+          onChange={handleChange}
+          required
+        />
+
+        <label htmlFor="attestation_cnom">Attestation CNOM (PDF/JPG/PNG) :</label>
+        <input
+          type="file"
+          id="attestation_cnom"
+          name="attestation_cnom"
+          accept=".pdf,.jpg,.jpeg,.png"
+          onChange={handleChange}
+          required
+        />
       </>
     ),
-    step5: (handleChange, formData) => (<><p>Merci de vérifier toutes les informations avant de soumettre.</p></>),
+
+    step5: () => (
+      <>
+        <p>Merci de vérifier toutes les informations avant de soumettre.</p>
+      </>
+    ),
   };
+
   return <BaseForm roleSpecificFields={roleSpecificFields} title="Médecin" />;
 }
+
 
 // 🧪 Laboratoire Form
 function LaboratoireForm() {
@@ -428,35 +536,108 @@ function LaboratoireForm() {
 // 💊 Pharmacien Form
 function PharmacienForm() {
   const roleSpecificFields = {
-    step2: (handleChange, formData) => (
-      <>
-        <input type="text" name="nom_pharmacie" placeholder="Nom de la pharmacie" onChange={handleChange} required value={formData.nom_pharmacie || ''} />
-        <input type="tel" name="telephone" placeholder="Téléphone" onChange={handleChange} required value={formData.telephone || ''} />
-      </>
-    ),
-    step3: (handleChange, formData) => (
-      <>
-        <input type="text" name="adresse" placeholder="Adresse de la pharmacie" onChange={handleChange} required value={formData.adresse || ''} />
-        <input type="text" name="ville" placeholder="Ville" onChange={handleChange} required value={formData.ville || ''} />
-      </>
-    ),
-    step4: (handleChange, formData) => (
-      <>
-        <select name="statut_pharmacien" onChange={handleChange} required value={formData.statut_pharmacien || 'actif'}>
-          <option value="actif">Actif</option>
-          <option value="inactif">Inactif</option>
-        </select>
-        <label>Pièce d'identité recto (PDF/JPG/PNG):
-          <input type="file" name="piece_identite_recto" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
-        </label>
-        <label>Pièce d'identité verso (PDF/JPG/PNG):
-          <input type="file" name="piece_identite_verso" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
-        </label>
-        <label>Diplôme (PDF/JPG/PNG):
-          <input type="file" name="diplome" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} required />
-        </label>
-      </>
-    ),
+   step2: (handleChange, formData) => (
+  <>
+    <label htmlFor="nom_pharmacie">Nom de la pharmacie:</label>
+    <input
+      type="text"
+      id="nom_pharmacie"
+      name="nom_pharmacie"
+      placeholder="Nom de la pharmacie"
+      onChange={handleChange}
+      required
+      value={formData.nom_pharmacie || ''}
+    />
+
+    <label htmlFor="telephone">Téléphone:</label>
+    <input
+      type="tel"
+      id="telephone"
+      name="telephone"
+      placeholder="Téléphone"
+      onChange={handleChange}
+      required
+      value={formData.telephone || ''}
+    />
+  </>
+),
+
+step3: (handleChange, formData) => (
+  <>
+    <label htmlFor="adresse">Adresse de la pharmacie:</label>
+    <input
+      type="text"
+      id="adresse"
+      name="adresse"
+      placeholder="Adresse de la pharmacie"
+      onChange={handleChange}
+      required
+      value={formData.adresse || ''}
+    />
+
+    <label htmlFor="ville">Ville:</label>
+    <input
+      type="text"
+      id="ville"
+      name="ville"
+      placeholder="Ville"
+      onChange={handleChange}
+      required
+      value={formData.ville || ''}
+    />
+  </>
+),
+
+step4: (handleChange, formData) => (
+  <>
+ <div className="form-group">
+  <label htmlFor="statut_pharmacien">Statut du pharmacien</label>
+  <select
+    id="statut_pharmacien"
+    name="statut_pharmacien"
+    onChange={handleChange}
+    required
+    value={formData.statut_pharmacien || 'actif'}
+    className="styled-select"
+  >
+    <option value="actif">Actif</option>
+    <option value="inactif">Inactif</option>
+  </select>
+</div>
+
+
+    <label htmlFor="piece_identite_recto">Pièce d'identité recto (PDF/JPG/PNG):</label>
+    <input
+      type="file"
+      id="piece_identite_recto"
+      name="piece_identite_recto"
+      accept=".pdf,.jpg,.jpeg,.png"
+      onChange={handleChange}
+      required
+    />
+
+    <label htmlFor="piece_identite_verso">Pièce d'identité verso (PDF/JPG/PNG):</label>
+    <input
+      type="file"
+      id="piece_identite_verso"
+      name="piece_identite_verso"
+      accept=".pdf,.jpg,.jpeg,.png"
+      onChange={handleChange}
+      required
+    />
+
+    <label htmlFor="diplome">Diplôme (PDF/JPG/PNG):</label>
+    <input
+      type="file"
+      id="diplome"
+      name="diplome"
+      accept=".pdf,.jpg,.jpeg,.png"
+      onChange={handleChange}
+      required
+    />
+  </>
+),
+
     step5: (handleChange, formData) => (<><p>Merci de vérifier toutes les informations avant de soumettre.</p></>),
   };
   return <BaseForm roleSpecificFields={roleSpecificFields} title="Pharmacien" />;
@@ -466,13 +647,32 @@ function PharmacienForm() {
 function PatientForm() {
   const roleSpecificFields = {
     step2: (handleChange, formData) => (
-      <>
-        <input type="date" name="date_naissance" placeholder="Date de naissance" onChange={handleChange} required value={formData.date_naissance || ''} />
-        <select name="genre" onChange={handleChange} required value={formData.genre || 'homme'}>
-          <option value="homme">Homme</option>
-          <option value="femme">Femme</option>
-        </select>
-      </>
+    <>
+  <label htmlFor="date_naissance">Date de naissance</label>
+  <input
+    type="date"
+    id="date_naissance"
+    name="date_naissance"
+    onChange={handleChange}
+    required
+    value={formData.date_naissance || ''}
+    className="styled-input"
+  />
+
+  <label htmlFor="genre">Genre</label>
+  <select
+    id="genre"
+    name="genre"
+    onChange={handleChange}
+    required
+    value={formData.genre || 'homme'}
+    className="styled-select"
+  >
+    <option value="homme">Homme</option>
+    <option value="femme">Femme</option>
+  </select>
+</>
+
     ),
     step3: undefined,
     step4: undefined,

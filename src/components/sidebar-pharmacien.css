@@ -66,8 +66,8 @@
 }
 
 .active-link {
-  background-color: #6f42c1;
-  color: white;
+  background-color: #6f42c1 !important;
+  color: white !important;
 }
 
 .sidebar-footer {

@@ -1,15 +1,3 @@
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body, html {
-  height: 100%;
-  background-color: #f4f4f4;
-  font-family: 'Segoe UI', sans-serif;
-}
 
 /* Page Wrapper */
 .select-wrapper {
@@ -41,6 +29,10 @@ body, html {
   justify-content: center;
   align-items: flex-start;
   position: relative;
+}
+.select-left img{
+ width: 320px;
+  margin-bottom: 2rem;
 }
 
 .select-left h1 {
@@ -159,8 +151,8 @@ body, html {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px;
-  padding-bottom: 10px;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
   border-bottom: 1px solid #eee;
 }
 
@@ -194,6 +186,7 @@ body, html {
   max-width: 500px;
   position: relative;
   box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  border-radius: 20px !important;
 }
 
 /* Close Button */
@@ -212,8 +205,7 @@ body, html {
 /* Form Inputs */
 .formulaire-inscription input {
   width: 100%;
-  padding: 12px 15px;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
   border-radius: 8px;
   border: 1px solid #ddd;
   font-size: 14px;
@@ -241,7 +233,6 @@ body, html {
 .formulaire-inscription {
   max-width: 480px;
   margin: 0 auto;
-  padding: 15px;
   font-family: Arial, sans-serif;
 }
 
@@ -251,7 +242,7 @@ body, html {
 .formulaire-inscription input[type="password"],
 .formulaire-inscription input[type="file"] {
   width: 100%;
-  padding: 10px 12px;
+  padding: 10px 10px;
   margin: 8px 0 16px;
   box-sizing: border-box;
   border: 1.5px solid #ccc;
@@ -269,7 +260,7 @@ body, html {
   background-color: #9C70DB;
   border: none;
   color: white;
-  padding: 10px 18px;
+  padding: 10px 15px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
@@ -289,4 +280,128 @@ body, html {
   display: flex;
   gap: 10px; /* space between buttons */
 }
- 
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  background-color: #f4f4f4;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Page Wrapper */
+.select-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Form Container */
+.formulaire-inscription {
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: Arial, sans-serif;
+}
+
+.formulaire-inscription h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+/* Labels */
+.formulaire-inscription label {
+  display: block;
+  font-size: 0.85rem;
+  color: #333;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+/* Inputs */
+.formulaire-inscription input[type="text"],
+.formulaire-inscription input[type="email"],
+.formulaire-inscription input[type="tel"],
+.formulaire-inscription input[type="password"],
+.formulaire-inscription input[type="file"],
+.formulaire-inscription input[type="date"],
+.formulaire-inscription .styled-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #fff;
+  color: #333;
+  transition: border-color 0.3s ease;
+}
+
+.formulaire-inscription input:focus,
+.formulaire-inscription .styled-input:focus {
+  border-color: #9C70DB;
+  outline: none;
+}
+
+/* Select (Dropdown) Styles */
+.formulaire-inscription select.styled-select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #fff;
+  color: #333;
+  transition: border-color 0.3s ease;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%239C70DB" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+.formulaire-inscription select.styled-select:focus {
+  border-color: #9C70DB;
+  outline: none;
+}
+
+/* Buttons */
+.step-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.step-buttons button,
+.formulaire-inscription button {
+  background-color: #9C70DB;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.step-buttons button:hover,
+.formulaire-inscription button:hover {
+  background-color: #7D4CC4;
+}
+
+.step-buttons button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
