@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import "./sidebar-medecin.css";
 
-const SidebarLaboratoire = ({ onMenuSelect }) => {
+const SidebarLaboratoire = ({ onMenuSelect, activeKey }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [user, setUser] = useState({ name: "", role: "" });
     const navigate = useNavigate();
@@ -55,7 +55,7 @@ const SidebarLaboratoire = ({ onMenuSelect }) => {
                             {item.path ? (
                                 <NavLink
                                     to={item.path}
-                                    className={({ isActive }) => (isActive ? "active-link" : "")}
+                                    className={({ isActive }) => (activeKey && ((activeKey === 'dashboard' && item.label === 'Tableau de bord') || (activeKey === 'demandes' && item.label === 'Demandes reçues') || (activeKey === 'historique' && item.label === 'Historique'))) ? 'active-link' : 'inactive-link'}
                                     onClick={() => { setIsOpen(false); if (item.action) item.action(); }}
                                 >
                                     <span className="icon">{item.icon}</span>
@@ -63,7 +63,7 @@ const SidebarLaboratoire = ({ onMenuSelect }) => {
                                 </NavLink>
                             ) : (
                                 <button
-                                    className="sidebar-link-btn"
+                                    className={`sidebar-link-btn ${activeKey === 'settings' ? 'active-link' : 'inactive-link'}`}
                                     onClick={() => { setIsOpen(false); if (item.action) item.action(); }}
                                     style={{ background: 'none', border: 'none', padding: 0, width: '100%', textAlign: 'left' }}
                                 >

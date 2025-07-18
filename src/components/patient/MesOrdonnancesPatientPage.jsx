@@ -8,6 +8,7 @@ const MesOrdonnancesPatientPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedIds, setSelectedIds] = useState([]);
+  const [bulkDownloading, setBulkDownloading] = useState(false);
 
   useEffect(() => {
     api
@@ -36,11 +37,59 @@ const MesOrdonnancesPatientPage = () => {
     }
   };
 
+  const handleDownload = async (ordonnanceId) => {
+    try {
+      const response = await api.get(`/ordonnances/${ordonnanceId}/download`, {
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `ordonnance_${ordonnanceId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      alert('Erreur lors du téléchargement de l\'ordonnance.');
+    }
+  };
+
+  const handleBulkDownload = async () => {
+    if (selectedIds.length === 0) return;
+    setBulkDownloading(true);
+    try {
+      const response = await api.post(
+        '/ordonnances/bulk-download',
+        { ordonnance_ids: selectedIds },
+        { responseType: 'blob' }
+      );
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'ordonnances_selection.pdf');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      alert("Erreur lors du téléchargement groupé.");
+    } finally {
+      setBulkDownloading(false);
+    }
+  };
+
   return (
     <div className="container">
       <div className="header">
         <h2 className="title">Ordonnances archivées</h2>
-        <button className="download-button">Télécharger la sélection</button>
+        <button
+          className="download-button"
+          onClick={handleBulkDownload}
+          disabled={selectedIds.length === 0 || bulkDownloading}
+        >
+          {bulkDownloading ? 'Téléchargement...' : 'Télécharger la sélection'}
+        </button>
       </div>
 
       {loading && <div>Chargement...</div>}
@@ -105,7 +154,7 @@ const MesOrdonnancesPatientPage = () => {
                   </td>
                   <td>{ord.detail || ord.remarques || "-"}</td>
                   <td>
-                    <button className="download-icon-button">
+                    <button className="download-icon-button" onClick={() => handleDownload(ord.id)}>
                       <Download size={18} />
                     </button>
                   </td>

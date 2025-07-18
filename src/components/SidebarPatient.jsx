@@ -11,7 +11,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import "./sidebar-patient.css"; // Make sure this is styled like sidebar-medecin.css
 
-const SidebarPatient = ({ onMenuSelect, onNavigate }) => {
+const SidebarPatient = ({ onMenuSelect, onNavigate, activeKey }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState({ name: "", role: "" });
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const SidebarPatient = ({ onMenuSelect, onNavigate }) => {
   const handleLogout = async () => {
     try {
       await api.post("/logout");
-    } catch {}
+    } catch { }
     localStorage.removeItem("token");
     navigate("/");
   };
@@ -58,7 +58,7 @@ const SidebarPatient = ({ onMenuSelect, onNavigate }) => {
               {item.path ? (
                 <NavLink
                   to={item.path}
-                  className={({ isActive }) => (isActive ? "active-link" : "")}
+                  className={({ isActive }) => (activeKey === 'dashboard' && item.label === 'Tableau de bord') ? "active-link" : "inactive-link"}
                   onClick={() => {
                     setIsOpen(false);
                     onNavigate?.();
@@ -69,7 +69,7 @@ const SidebarPatient = ({ onMenuSelect, onNavigate }) => {
                 </NavLink>
               ) : (
                 <button
-                  className="sidebar-link-btn"
+                  className={`sidebar-link-btn ${activeKey === 'ordonnances' && item.label === 'Mes ordonnances' ? 'active-link' : 'inactive-link'}`}
                   onClick={() => {
                     setIsOpen(false);
                     item.action?.();
@@ -85,7 +85,7 @@ const SidebarPatient = ({ onMenuSelect, onNavigate }) => {
 
         <div className="sidebar-settings">
           <button
-            className="sidebar-link-btn"
+            className={`sidebar-link-btn ${activeKey === 'settings' ? 'active-link' : 'inactive-link'}`}
             onClick={() => {
               setIsOpen(false);
               onMenuSelect?.("settings");

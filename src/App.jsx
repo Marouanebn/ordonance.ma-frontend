@@ -76,7 +76,7 @@ function App() {
         </Route>
         {/* Private routes (all dashboards, protected pages) */}
         <Route element={<PrivateRoute />}>
-          <Route path="/dashboard" element={<DashboardMedecin />} />
+          <Route path="/dashboard-medecin" element={<DashboardMedecin />} />
           <Route path="/dashboard-pharmacien" element={<DashboardPharmacien />} />
           <Route path="/dashboard-laboratoire" element={<DashboardLaboratoire />} />
           <Route path="/dashboard-patient" element={<DashboardPatient />} />

@@ -1,7 +1,8 @@
 .sidebar-patient {
   width: 260px;
   background-color: #f5f5ff;
-  height: 100vh; /* Full height */
+  height: 100vh;
+  /* Full height */
   padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
@@ -11,7 +12,8 @@
   top: 0;
   transition: transform 0.3s ease-in-out;
   z-index: 1000;
-  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.05); /* Light shadow */
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.05);
+  /* Light shadow */
   border-right: 1px solid #e4e4e4;
 }
 
@@ -68,6 +70,11 @@
 .active-link {
   background-color: #6f42c1;
   color: white !important;
+}
+
+.inactive-link {
+  background: none;
+  color: #333 !important;
 }
 
 .sidebar-item .icon {

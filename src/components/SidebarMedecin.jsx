@@ -12,7 +12,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import "./sidebar-medecin.css";
 
-const SidebarMedecin = ({ onMenuSelect, onNavigate }) => {
+const SidebarMedecin = ({ onMenuSelect, onNavigate, activeKey }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState({ name: "", role: "" });
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const SidebarMedecin = ({ onMenuSelect, onNavigate }) => {
   const handleLogout = async () => {
     try {
       await api.post("/logout");
-    } catch {}
+    } catch { }
     localStorage.removeItem("token");
     navigate("/");
   };
@@ -62,7 +62,7 @@ const SidebarMedecin = ({ onMenuSelect, onNavigate }) => {
               <li key={index} className="sidebar-item">
                 <NavLink
                   to={item.path}
-                  className={({ isActive }) => (isActive ? "active-link" : "")}
+                  className={({ isActive }) => (activeKey === 'dashboard' && item.label === 'Tableau de bord') || (activeKey === 'ordonance' && item.label === 'Ordonance') || (activeKey === 'medicaments' && item.label === 'Médicaments') ? "active-link" : "inactive-link"}
                   onClick={() => {
                     setIsOpen(false);
                     if (onNavigate) onNavigate();
@@ -77,7 +77,7 @@ const SidebarMedecin = ({ onMenuSelect, onNavigate }) => {
 
         <div className="sidebar-settings">
           <button
-            className="sidebar-link-btn"
+            className={`sidebar-link-btn ${activeKey === 'settings' ? 'active-link' : 'inactive-link'}`}
             onClick={() => {
               setIsOpen(false);
               onMenuSelect && onMenuSelect("settings");
@@ -100,10 +100,10 @@ const SidebarMedecin = ({ onMenuSelect, onNavigate }) => {
               <p className="sidebar-role">{user.role}</p>
             </div>
           </div>
-     <button className="logout-text-btn" onClick={handleLogout}>
-  <LogOut size={18} />
-  <span>Se déconnecter</span>
-</button>
+          <button className="logout-text-btn" onClick={handleLogout}>
+            <LogOut size={18} />
+            <span>Se déconnecter</span>
+          </button>
 
         </div>
       </aside>

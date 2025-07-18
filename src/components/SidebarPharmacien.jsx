@@ -12,7 +12,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import api from "../lib/api";
 import "./sidebar-pharmacien.css";
 
-const SidebarPharmacien = ({ onMenuSelect }) => {
+const SidebarPharmacien = ({ onMenuSelect, activeKey }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState({ name: "", role: "" });
   const [selectedTab, setSelectedTab] = useState("");
@@ -42,7 +42,7 @@ const SidebarPharmacien = ({ onMenuSelect }) => {
   const handleLogout = async () => {
     try {
       await api.post("/logout");
-    } catch {}
+    } catch { }
     localStorage.removeItem("token");
     navigate("/");
   };
@@ -86,13 +86,11 @@ const SidebarPharmacien = ({ onMenuSelect }) => {
             <li key={item.id} className="sidebar-item">
               {item.path ? (
                 <button
-                  className={`sidebar-link-btn ${
-                    selectedTab === item.id ? "active-link" : ""
-                  }`}
+                  className={`sidebar-link-btn ${activeKey === item.id ? 'active-link' : 'inactive-link'}`}
                   onClick={() => {
                     setIsOpen(false);
-                    setSelectedTab(item.id);
-                    navigate(item.path);
+                    if (item.path) navigate(item.path);
+                    if (item.action) item.action();
                   }}
                 >
                   <span className="icon">{item.icon}</span>
@@ -100,12 +98,9 @@ const SidebarPharmacien = ({ onMenuSelect }) => {
                 </button>
               ) : (
                 <button
-                  className={`sidebar-link-btn ${
-                    selectedTab === item.id ? "active-link" : ""
-                  }`}
+                  className={`sidebar-link-btn ${activeKey === item.id ? 'active-link' : 'inactive-link'}`}
                   onClick={() => {
                     setIsOpen(false);
-                    setSelectedTab(item.id);
                     if (item.action) item.action();
                   }}
                 >
@@ -119,12 +114,9 @@ const SidebarPharmacien = ({ onMenuSelect }) => {
 
         <div className="sidebar-settings">
           <button
-            className={`sidebar-link-btn ${
-              selectedTab === "settings" ? "active-link" : ""
-            }`}
+            className={`sidebar-link-btn ${activeKey === 'settings' ? 'active-link' : 'inactive-link'}`}
             onClick={() => {
               setIsOpen(false);
-              setSelectedTab("settings");
               onMenuSelect && onMenuSelect("settings");
             }}
           >

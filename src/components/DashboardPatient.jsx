@@ -4,7 +4,7 @@ import Topbar from "./Topbar.jsx";
 import SettingsPage from "./common/SettingsPage.jsx";
 import MesOrdonnancesPatientPage from "./patient/MesOrdonnancesPatientPage.jsx";
 import "./topbar.css";
-import Footer from "./Footer.jsx"; 
+import Footer from "./Footer.jsx";
 
 const DashboardPatient = () => {
     const [roleMessage, setRoleMessage] = useState("");
@@ -23,7 +23,7 @@ const DashboardPatient = () => {
     };
     return (
         <div style={{ display: "flex", minHeight: "100vh" }}>
-            <SidebarPatient onMenuSelect={handleMenuSelect} />
+            <SidebarPatient onMenuSelect={handleMenuSelect} activeKey={showSettings ? 'settings' : showOrdonnances ? 'ordonnances' : 'dashboard'} />
             <div style={{ flex: 1, display: "flex", flexDirection: "column", marginLeft: 260 }}>
                 <Topbar title="Tableau de bord Patient" />
                 <div style={{ flex: 1, padding: "30px", backgroundColor: "#f9f9f9" }}>
@@ -43,7 +43,7 @@ const DashboardPatient = () => {
                     )}
                 </div>
 
-               <Footer />
+                <Footer />
             </div>
         </div>
     );
