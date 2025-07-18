@@ -9,10 +9,13 @@ import {
 } from "recharts";
 import { Package, Archive, Users, UserCheck } from "lucide-react";
 import Footer from "./Footer.jsx"; // adjust path if needed
+import api from "../lib/api";
 
 const DashboardMedecin = () => {
   const [roleMessage, setRoleMessage] = useState("");
   const [showSettings, setShowSettings] = useState(false);
+  const [stats, setStats] = useState(null);
+  const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
     const msg = localStorage.getItem("roleMessage");
@@ -20,6 +23,11 @@ const DashboardMedecin = () => {
       setRoleMessage(msg);
       localStorage.removeItem("roleMessage");
     }
+    setLoadingStats(true);
+    api.get("/stats/medecin").then(res => {
+      setStats(res.data);
+      setLoadingStats(false);
+    }).catch(() => setLoadingStats(false));
   }, []);
 
   const lineData = [
@@ -65,69 +73,53 @@ const DashboardMedecin = () => {
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20, marginBottom: 40 }}>
                 <div style={{ background: "#fff", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
                   <div style={{ marginBottom: 10 }}><Package size={24} color="#22c55e" /></div>
-                  <p>Total cartouches consommées</p>
-                  <h2 style={{ margin: "10px 0" }}>467</h2>
-                  <span style={{ fontSize: 12, color: "#22c55e" }}>+3.48% Depuis le mois dernier</span>
+                  <p>Total ordonnances</p>
+                  <h2 style={{ margin: "10px 0" }}>{loadingStats ? '...' : stats?.totalOrdonnances ?? '-'}</h2>
                 </div>
 
                 <div style={{ background: "#fff", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
                   <div style={{ marginBottom: 10 }}><Archive size={24} color="#ef4444" /></div>
-                  <p>Cartouches disponibles</p>
-                  <h2 style={{ margin: "10px 0" }}>533</h2>
-                  <span style={{ fontSize: 12, color: "#ef4444" }}>-3.48% Depuis le mois dernier</span>
+                  <p>Ordonnances archivées</p>
+                  <h2 style={{ margin: "10px 0" }}>{loadingStats ? '...' : stats?.archivedOrdonnances ?? '-'}</h2>
                 </div>
 
                 <div style={{ background: "#fff", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
                   <div style={{ marginBottom: 10 }}><Users size={24} color="#22c55e" /></div>
                   <p>Nombre de patients</p>
-                  <h2 style={{ margin: "10px 0" }}>409</h2>
-                  <span style={{ fontSize: 12, color: "#22c55e" }}>+3.48% Depuis le mois dernier</span>
-                </div>
-
-                <div style={{ background: "#fff", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
-                  <div style={{ marginBottom: 10 }}><UserCheck size={24} color="#22c55e" /></div>
-                  <p>Nombre de médecins</p>
-                  <h2 style={{ margin: "10px 0" }}>84</h2>
-                  <span style={{ fontSize: 12, color: "#22c55e" }}>+3.48% Depuis le mois dernier</span>
+                  <h2 style={{ margin: "10px 0" }}>{loadingStats ? '...' : stats?.nombrePatients ?? '-'}</h2>
                 </div>
               </div>
-
               {/* 📊 Charts */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "30px" }}>
                 {/* Line Chart */}
                 <div style={{ background: "#fff", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
-                  <h3 style={{ marginBottom: 20 }}>Consommation des cartouches</h3>
+                  <h3 style={{ marginBottom: 20 }}>Ordonnances par mois</h3>
                   <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={lineData}>
+                    <LineChart data={stats?.charts?.ordonnancesByMonth || []}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
+                      <XAxis dataKey="month" />
                       <YAxis />
                       <Tooltip />
-                      <Line type="monotone" dataKey="value" stroke="#6366f1" strokeWidth={3} />
+                      <Line type="monotone" dataKey="count" stroke="#6366f1" strokeWidth={3} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
 
-                {/* Donut Chart */}
+                {/* Pie Chart */}
                 <div style={{ background: "#fff", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
-                  <h3 style={{ marginBottom: 20 }}>Répartition par Lab</h3>
+                  <h3 style={{ marginBottom: 20 }}>Genre des patients</h3>
                   <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                       <Pie
-                        data={pieData}
-                        dataKey="value"
-                        nameKey="name"
+                        data={stats?.charts?.repartition || []}
+                        dataKey="count"
+                        nameKey="label"
                         cx="50%"
                         cy="50%"
-                        innerRadius={60}
                         outerRadius={100}
                         fill="#8884d8"
                         label
-                      >
-                        {pieData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
+                      />
                       <Legend />
                       <Tooltip />
                     </PieChart>
@@ -137,7 +129,7 @@ const DashboardMedecin = () => {
             </>
           )}
         </div>
-          <Footer />
+        <Footer />
 
       </div>
     </div>
