@@ -12,6 +12,7 @@ const DashboardPatient = () => {
     const [roleMessage, setRoleMessage] = useState("");
     const [showSettings, setShowSettings] = useState(false);
     const [showOrdonnances, setShowOrdonnances] = useState(false);
+    const [showOrdonnancesArchivees, setShowOrdonnancesArchivees] = useState(false);
     const [stats, setStats] = useState(null);
     const [loadingStats, setLoadingStats] = useState(true);
     useEffect(() => {
@@ -29,17 +30,20 @@ const DashboardPatient = () => {
     const handleMenuSelect = (key) => {
         setShowSettings(key === 'settings');
         setShowOrdonnances(key === 'ordonnances');
+        setShowOrdonnancesArchivees(key === 'ordonnances-archivees');
     };
     return (
         <div style={{ display: "flex", minHeight: "100vh" }}>
-            <SidebarPatient onMenuSelect={handleMenuSelect} onNavigate={() => { setShowSettings(false); setShowOrdonnances(false); }} activeKey={showSettings ? 'settings' : showOrdonnances ? 'ordonnances' : 'dashboard'} />
+            <SidebarPatient onMenuSelect={handleMenuSelect} onNavigate={() => { setShowSettings(false); setShowOrdonnances(false); setShowOrdonnancesArchivees(false); }} activeKey={showSettings ? 'settings' : showOrdonnances ? 'ordonnances' : showOrdonnancesArchivees ? 'ordonnances-archivees' : 'dashboard'} />
             <div style={{ flex: 1, display: "flex", flexDirection: "column", marginLeft: 260 }}>
                 <Topbar title="Tableau de bord Patient" />
                 <div style={{ flex: 1, padding: "30px", backgroundColor: "#f9f9f9" }}>
                     {showSettings ? (
                         <SettingsPage />
                     ) : showOrdonnances ? (
-                        <MesOrdonnancesPatientPage />
+                        <MesOrdonnancesPatientPage isArchived={false} />
+                    ) : showOrdonnancesArchivees ? (
+                        <MesOrdonnancesPatientPage isArchived={true} />
                     ) : (
                         <>
                             {roleMessage && (

@@ -3,7 +3,7 @@ import api from "../../lib/api";
 import { Download } from "lucide-react";
 import "./MesOrdonnancesPatientPage.css";
 
-const MesOrdonnancesPatientPage = () => {
+const MesOrdonnancesPatientPage = ({ isArchived = false }) => {
   const [ordonnances, setOrdonnances] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -11,8 +11,9 @@ const MesOrdonnancesPatientPage = () => {
   const [bulkDownloading, setBulkDownloading] = useState(false);
 
   useEffect(() => {
+    const endpoint = isArchived ? "/patient/ordonnances-archivees" : "/patient/ordonnances";
     api
-      .get("/patient/ordonnances")
+      .get(endpoint)
       .then((res) => {
         setOrdonnances(res.data.data?.data || []);
         setLoading(false);
@@ -21,7 +22,7 @@ const MesOrdonnancesPatientPage = () => {
         setError("Erreur lors du chargement des ordonnances.");
         setLoading(false);
       });
-  }, []);
+  }, [isArchived]);
 
   const toggleSelection = (id) => {
     setSelectedIds((prev) =>
@@ -79,10 +80,42 @@ const MesOrdonnancesPatientPage = () => {
     }
   };
 
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'validated':
+        return 'Validée';
+      case 'rejected':
+        return 'Rejetée';
+      case 'dispensed':
+        return 'Délivrée';
+      case 'archived':
+        return 'Archivée';
+      default:
+        return 'Active';
+    }
+  };
+
+  const getStatusClass = (status) => {
+    switch (status) {
+      case 'validated':
+        return 'status-validated';
+      case 'rejected':
+        return 'status-rejected';
+      case 'dispensed':
+        return 'status-dispensed';
+      case 'archived':
+        return 'status-archived';
+      default:
+        return 'status-active';
+    }
+  };
+
   return (
     <div className="container">
       <div className="header">
-        <h2 className="title">Ordonnances archivées</h2>
+        <h2 className="title">
+          {isArchived ? "Ordonnances archivées" : "Mes ordonnances"}
+        </h2>
         <button
           className="download-button"
           onClick={handleBulkDownload}
@@ -130,9 +163,9 @@ const MesOrdonnancesPatientPage = () => {
                   </td>
                   <td>{new Date(ord.created_at).toLocaleDateString()}</td>
                   <td>
-                    <div className="status-indicator">
+                    <div className={`status-indicator ${getStatusClass(ord.status)}`}>
                       <span className="dot"></span>
-                      Archivée
+                      {getStatusText(ord.status)}
                     </div>
                   </td>
                   <td>{ord.medecin?.user?.name || "-"}</td>

@@ -39,6 +39,7 @@ const SidebarPatient = ({ onMenuSelect, onNavigate, activeKey }) => {
   const menuItems = [
     { label: "Tableau de bord", icon: <LayoutDashboard />, path: "/dashboard-patient" },
     { label: "Mes ordonnances", icon: <FileText />, action: () => onMenuSelect?.("ordonnances") },
+    { label: "Ordonnances archivées", icon: <FileText />, action: () => onMenuSelect?.("ordonnances-archivees") },
   ];
 
   return (
@@ -69,7 +70,7 @@ const SidebarPatient = ({ onMenuSelect, onNavigate, activeKey }) => {
                 </NavLink>
               ) : (
                 <button
-                  className={`sidebar-link-btn ${activeKey === 'ordonnances' && item.label === 'Mes ordonnances' ? 'active-link' : 'inactive-link'}`}
+                  className={`sidebar-link-btn ${(activeKey === 'ordonnances' && item.label === 'Mes ordonnances') || (activeKey === 'ordonnances-archivees' && item.label === 'Ordonnances archivées') ? 'active-link' : 'inactive-link'}`}
                   onClick={() => {
                     setIsOpen(false);
                     item.action?.();

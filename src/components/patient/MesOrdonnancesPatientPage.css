@@ -75,13 +75,55 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .status-indicator .dot {
   width: 8px;
   height: 8px;
-  background-color: #6b7280;
   border-radius: 50%;
+  background-color: #6b7280;
+}
+
+.status-active .dot {
+  background-color: #3b82f6;
+}
+
+.status-validated .dot {
+  background-color: #10b981;
+}
+
+.status-rejected .dot {
+  background-color: #ef4444;
+}
+
+.status-dispensed .dot {
+  background-color: #8b5cf6;
+}
+
+.status-archived .dot {
+  background-color: #6b7280;
+}
+
+.status-active {
+  color: #3b82f6;
+}
+
+.status-validated {
+  color: #10b981;
+}
+
+.status-rejected {
+  color: #ef4444;
+}
+
+.status-dispensed {
+  color: #8b5cf6;
+}
+
+.status-archived {
+  color: #6b7280;
 }
 
 .download-icon-button {
@@ -95,6 +137,7 @@
 .download-icon-button:hover {
   color: #059669;
 }
+
 .table ul {
   list-style: none;
   margin: 0;
