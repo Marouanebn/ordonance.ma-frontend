@@ -38,7 +38,7 @@ const SidebarMedecin = ({ onMenuSelect, onNavigate, activeKey }) => {
   const toggleSidebar = () => setIsOpen(!isOpen);
 
   const menuItems = [
-    { label: "Tableau de bord", icon: <LayoutDashboard />, path: "/dashboard" },
+    { label: "Tableau de bord", icon: <LayoutDashboard />, path: "/dashboard-medecin" },
     { label: "Ordonance", icon: <FilePlus />, path: "/medecin/ordonance" },
     { label: "Médicaments", icon: <Pill />, path: "/medecin/medicaments" },
     { label: "Paramètre", icon: <Settings />, action: () => onMenuSelect && onMenuSelect("settings") },
